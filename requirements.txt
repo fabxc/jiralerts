@@ -1,0 +1,5 @@
+uWSGI
+Click
+Flask
+Jira
+prometheus_client
