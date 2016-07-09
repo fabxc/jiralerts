@@ -154,14 +154,27 @@ def metrics():
 def main(host, port, server, debug):
     global jira
 
-    username = os.environ.get('JIRA_USERNAME')
-    password = os.environ.get('JIRA_PASSWORD')
+    basic_auth = (
+            os.environ.get('JIRA_USERNAME'),
+            os.environ.get('JIRA_PASSWORD')
+            )
 
-    if not username or not password:
-        print("JIRA_USERNAME or JIRA_PASSWORD not set")
+    oauth_dict = {
+        'access_token': os.environ.get('JIRA_ACCESS_TOKEN'),
+        'access_token_secret': os.environ.get('JIRA_ACCESS_TOKEN_SECRET'),
+        'consumer_key': os.environ.get('JIRA_CONSUMER_KEY'),
+        'key_cert': os.environ.get('JIRA_KEY_CERT')
+        }
+
+    if None in basic_auth and None in oauth_dict.values():
+        print("authentication environment variables not set")
         sys.exit(2)
 
-    jira = JIRA(basic_auth=(username, password), server=server, logging=debug)
+    if None not in oauth_dict.values():
+        jira = JIRA(oauth=oauth_dict, server=server, logging=debug)
+    else:
+        jira = JIRA(basic_auth=basic_auth, server=server, logging=debug)
+
     app.run(host=host, port=port, debug=debug)
 
 if __name__ == "__main__":
