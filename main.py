@@ -66,7 +66,7 @@ def close(issue, tid):
 
 @jira_request_time_reopen.time()
 def reopen(issue, tid):
-    return jira.transition_issue(issue, trans['reopen'])
+    return jira.transition_issue(issue, tid)
 
 @jira_request_time_update.time()
 def update_issue(issue, summary, description):
