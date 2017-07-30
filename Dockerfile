@@ -23,5 +23,5 @@ ENTRYPOINT ["/sbin/tini", "--"]
 
 # Allow the use of environment variables in the CMD. 
 # See https://github.com/moby/moby/issues/5509
-CMD ["sh", "-c", "python /opt/jiraalerts/main.py $JIRA_SERVER"]
+CMD ["sh", "-c", "python /opt/jiraalerts/main.py --host='0.0.0.0' $JIRA_SERVER"]
 
