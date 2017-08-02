@@ -2,8 +2,10 @@
 
 import os
 import sys
+import configparser
 
 import click
+
 from flask import Flask, request, make_response
 from jira import JIRA
 from jinja2 import Template
@@ -12,6 +14,10 @@ import prometheus_client as prometheus
 app = Flask(__name__)
 
 jira = None
+
+# Setup the configuration
+config = configparser.ConfigParser()
+config.read('jiralerts.ini')
 
 summary_tmpl = Template(r'{% if commonAnnotations.summary %}{{ commonAnnotations.summary }}{% else %}{% for k, v in groupLabels.items() %}{{ k }}="{{v}}" {% endfor %}{% endif %}')
 
@@ -81,7 +87,7 @@ def create_issue(project, team, summary, description):
         'project': {'key': project},
         'summary': summary,
         'description': "%s\n\n%s" % (description_boundary, description),
-        'issuetype': {'name': 'Task'},
+        'issuetype': {'name': config['jira']['issue_type']},
         'labels': ['alert', team],
     })
 
