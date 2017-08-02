@@ -19,6 +19,11 @@ jira = None
 config = configparser.ConfigParser()
 config.read('jiralerts.ini')
 
+if not config.has_section('jira'):
+    config['jira'] = {}
+
+jira_config = config['jira']
+
 summary_tmpl = Template(r'{% if commonAnnotations.summary %}{{ commonAnnotations.summary }}{% else %}{% for k, v in groupLabels.items() %}{{ k }}="{{v}}" {% endfor %}{% endif %}')
 
 description_tmpl = Template(r'''
@@ -87,7 +92,7 @@ def create_issue(project, team, summary, description):
         'project': {'key': project},
         'summary': summary,
         'description': "%s\n\n%s" % (description_boundary, description),
-        'issuetype': {'name': config['jira']['issue_type']},
+        'issuetype': {'name': jira_config.get('issue_type', 'Task')},
         'labels': ['alert', team],
     })
 
