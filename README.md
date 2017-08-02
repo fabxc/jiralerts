@@ -21,7 +21,7 @@ In your Alertmanager receiver configurations:
 receivers:
 - name: 'jira_issues'
   webhook_configs:
-  - url: 'http://<jira_address>/<jira_project>/<single_label>'
+  - url: 'http://<jiralerts_address>/issues/<jira_project>/<team>'
 ```
 
 A typical usage could be a single 'ALERTS' projects where the label in the URL
